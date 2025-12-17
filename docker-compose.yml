@@ -1,0 +1,37 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgis/postgis:15-3.3
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: flow
+    ports:
+      - "5432:5432"
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+  api:
+    build: ./services/api
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/flow
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: devsecret
+      OPENWEATHER_KEY: demo
+      PORT: 4000
+      CORS_ORIGIN: http://localhost:5173
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+      - redis
+  worker:
+    build: ./services/worker
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/flow
+      REDIS_URL: redis://redis:6379
+      OPENWEATHER_KEY: demo
+    depends_on:
+      - postgres
+      - redis

@@ -1,0 +1,18 @@
+{
+  "name": "arkansas-flow-tracker",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm --workspace services/api run dev\" \"npm --workspace services/worker run dev\" \"npm --workspace apps/web run dev\"",
+    "mobile": "npm --workspace apps/mobile run start",
+    "build": "npm --workspace services/api run build && npm --workspace services/worker run build && npm --workspace apps/web run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "typescript": "^5.3.3"
+  }
+}
